@@ -14,7 +14,6 @@ import {useGlobalContext} from "@/app/context/index"
     quickStart: false,
     language: "en",
   };
-
   const style = { width: "100%", height: "100vh", border: "none", margin: 0 };
   
 export default function AvatarConfig(){
@@ -22,13 +21,13 @@ export default function AvatarConfig(){
     const router = useRouter()
 
     const [avatarUrl, setAvatarUrl] = useState<string>();
-    const { setCopy,user } = useGlobalContext()
+    const { setUrl,setImage } = useGlobalContext()
 
     const handleOnAvatarExported = (event: AvatarExportedEvent) => {
-      // console.log(event.data)
-      console.log("user",user)
       setAvatarUrl(event.data.url);
-      setCopy(event.data.url)
+      // @ts-ignore
+      setImage(event.data.avatarId)
+      setUrl(event.data.url)
       router.push("/auth/register")
     };
   

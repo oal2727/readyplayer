@@ -6,15 +6,19 @@ export type IUser={
 }
 
 export type IGlobalContent = {
-  copy: string
-  setCopy:(c: string) => void
+  url: string
+  imageId:string,
+  setUrl:(c: string) => void
+  setImage:(c: string)=>void
   user:IUser,
   setUser:(u:IUser) => void
 }
 export const GlobalContext = createContext<IGlobalContent>({
-  copy: '', 
-  setCopy: () => {},
+  url: '', 
+  imageId:'',
+  setUrl: () => {},
   setUser: () => {},
+  setImage:() => {},
   user:{
     fullName:"",
     password:"",

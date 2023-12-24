@@ -7,7 +7,7 @@ export const credentialsProvider = CredentialsProvider({
 	id: 'Credentials',
 	name: 'Credentials',
 	credentials: {
-		email: { label: 'Email', type: 'text' },
+		email: { label: 'Email', type: 'email' },
 		password: { label: 'Password', type: 'password' },
 	},
 	async authorize(credentials) {
@@ -31,10 +31,10 @@ export const credentialsProvider = CredentialsProvider({
 			return {
 				id: user.id,
 				fullName:user.fullName,
-				avatar:user.avatar
+				avatar:user.avatar,
+				email:user.email
 			}
 		}
-
 		return null
 	},
 })

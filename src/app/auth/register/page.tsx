@@ -16,7 +16,7 @@ import { toast } from 'sonner'
 export default function RegisterPage() {
 
 
-  const { copy, setUser,user } = useGlobalContext()
+  const { imageId,url, setUser,user } = useGlobalContext()
 
   const form = useForm<RegisterFrontEndSchema>({
 		resolver: zodResolver(registerSchemaFrontend),
@@ -45,12 +45,12 @@ export default function RegisterPage() {
     const onRegister=async(data: RegisterFrontEndSchema) =>{
 		try {
       console.log("register")
-          data.avatar = "image"//copy
+          data.avatar = imageId
           await registerUser({
             ...data
           })
           reset()
-          router.push("/login")
+          router.push("/auth/login")
           toast.success("Register success")
       }
 		catch (e) {
@@ -103,9 +103,9 @@ export default function RegisterPage() {
               }}
               className="bg-green-500 hover:bg-green-700 flex flex-row items-center m-auto text-center justify-center"><CircleUser className="mx-2"/>Crear avatar</Button>
              {
-              (copy != "") && (
+              (url != "") && (
                 <Avatar
-                modelSrc={copy}
+                modelSrc={url}
                 style={style}
                 className="w-64 h-64 m-auto items-center"
               />

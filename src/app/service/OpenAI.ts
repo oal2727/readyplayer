@@ -6,11 +6,10 @@ class OpenAiService{
     openai:any
     constructor(){
         this.openai = new OpenAI({
-            apiKey: process.env.NEXT_PUBLIC_OPENAI, // This is the default and can be omitted
+            apiKey: process.env.NEXT_OPENAI,
           });
     }
     async analyzeText(text:string){
-        console.log("open analyze")
         const response = await  this.openai.chat.completions.create({
             messages: [{ role: "system", content:text }],
             model: "gpt-3.5-turbo",

@@ -3,9 +3,9 @@ import Image from 'next/image'
 import {useEffect, useState} from "react"
 import { useSession } from 'next-auth/react'
 import AvatarChat from './AvatarChat';
-import {validateTextForAudio,validateAudioForText,removeAudioFile} from "../api"
-import fs from 'fs';
 import Loading from './Loading';
+import {trpc} from "@/lib/trpc/client" 
+
 type IMessages={
     id:number,
     message:string,
@@ -17,24 +17,35 @@ export default function ChatTable(){
 
     const { data: session } = useSession()
     const user = session?.user
+    const nameUser = String(user?.fullName)
     const [mediaRecorder, setMediaRecorder] = useState<any>(null);
     const [recording, setRecording] = useState(false);
+    const [processResponse,setProcessResponse] = useState<boolean>(true)
     const [message,setMessages] = useState<IMessages[]>([
-        {id:new Date().getTime(),loading:false,message:"Hola Soy tu asistente Virtual , puedes hablarme por voz lo interpretare  y te respondere",user:"chatbot"}
+        {id:new Date().getTime(),loading:false,message:"Hola Soy tu asistente Virtual , puedes hablarme por voz lo interpretare  y te respondere",user:"Bot_Maria"}
     ])
-    const sendRecordingToApi=(audioBlob:any)=>{
+
+    const { mutateAsync: convertAudio} = trpc.voice.convertAudioToText.useMutation()
+    const { mutateAsync: audioForBot } = trpc.voice.audioBotAndMessage.useMutation()
+    const { mutateAsync: removeAudio } = trpc.voice.removeAudio.useMutation()
+
+
+    const sendRecordingToApi=async(audioBlob:any)=>{
         try {
             const reader = new FileReader();
             reader.readAsDataURL(audioBlob);
             reader.onloadend = async function () {
-              const base64Audio = reader.result.split(',')[1]; // Remove the data URL prefix
-              const data = await validateAudioForText(base64Audio)
+                const base64Audio = (reader.result as string).split(',')[1] as string;
+              const data = await convertAudio({audio:base64Audio})
+                console.log("data_test",data)
+              //   const data = await validateAudioForText(base64Audio)
               const formatMessage={
                 id:new Date().getTime(),
                 loading:false,
-                message:data.result,
-                user:"jose"//),
+                message:data,
+                user:nameUser//),
               }
+              console.log(formatMessage)
               setMessages(prevMessages => [...prevMessages, formatMessage]);
               // TEXT FOR AUDIO FOR OPENAI MODEL
               const idMessage = new Date().getTime()
@@ -42,10 +53,10 @@ export default function ChatTable(){
                 id:idMessage,
                 message:"",
                 loading:true,
-                user:"chatbot"//),
+                user:"Bot_Maria"//),
               }
               setMessages(prevMessages => [...prevMessages, formatMessage2]);
-              const response = await validateTextForAudio(data.result)
+              const response = await audioForBot({text:data})
               const audio = new Audio("/"+response.audio)
               audio.play()
               setMessages((prevMessages) => {
@@ -56,7 +67,9 @@ export default function ChatTable(){
                 return updatedMessages;
               });
               // SPEAK TEXT FOR OPENAI MODEL
-              await removeAudioFile(response.audio)
+              await removeAudio({audio:response.audio})
+              setProcessResponse(true)
+
             }
           } catch (error) {
             console.error(error);
@@ -105,8 +118,8 @@ export default function ChatTable(){
             
         }else{
             mediaRecorder.stop(); //pause for recording
+            setProcessResponse(false)
         }
-        // setRecording(!value);
     }
 
     const public_avatar = String(process.env.NEXT_PUBLIC_AVATAR)
@@ -114,7 +127,6 @@ export default function ChatTable(){
     const publicAvatarGlb = public_avatar.replace("image","6584c498d3ccf6fa247d44ff.glb")
     const publicImageUserGlb = public_avatar.replace("image",String(user?.avatar)+".glb")
     const publicImageUser = public_avatar.replace("image",String(user?.avatar)+".png")
-    const nameUser = "jose"
     return(
         <div className="
         grid 
@@ -127,6 +139,7 @@ export default function ChatTable(){
                   <AvatarChat
             avatarUri={publicImageUserGlb}
             name_user={nameUser} 
+            showMicrophone={processResponse}
             recording={recording}
             onClick={(value:boolean)=>toogleMicrophone(value)}
           />
@@ -156,7 +169,7 @@ export default function ChatTable(){
             </div>
             <AvatarChat
             avatarUri={publicAvatarGlb}
-            name_user="chatbot" 
+            name_user="Bot_Maria" 
             onClick={(value:boolean)=>toogleMicrophone(value)}
           />
         </div>
