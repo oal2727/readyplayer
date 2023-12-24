@@ -5,10 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "db:generate": "npx prisma generate",
     "db:migrate": "npx prisma db push",
     "db:seed": "npx prisma db seed",
     "start": "next start",
+    "postinstall": "npx prisma generate",
     "lint": "next lint"
   },
   "dependencies": {
