@@ -8,7 +8,7 @@ import OpenAiService from "@/app/service/OpenAI"
 const openAiService = new OpenAiService()
 
 async function convertAudioToText(audioData:Buffer) {
-    const currentWorkingDirectory = process.cwd();
+    const currentWorkingDirectory = "./public/"//process.cwd();
     const outputPath = path.join(currentWorkingDirectory, 'output.mp3');
     fs.writeFileSync(outputPath, audioData);
     console.log(outputPath)

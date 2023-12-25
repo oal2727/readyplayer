@@ -5,6 +5,7 @@ import Button from "@/app/auth/components/Button"
 import TextInput from "@/app/auth/components/TextInput"
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CircleUser } from "lucide-react"
+import {useState} from "react"
 import { RegisterFrontEndSchema, registerSchemaFrontend} from "@/schema/user"
 import { useRouter } from 'next/navigation'
 import { Avatar } from "@readyplayerme/visage";
@@ -28,6 +29,7 @@ export default function RegisterPage() {
 	})
 
   const { mutateAsync: registerUser, isLoading: isUpdatingRadio } = trpc.user.register.useMutation()
+  const [loading,setLoading] = useState<boolean>(false)
 
 
   const {
@@ -41,11 +43,10 @@ export default function RegisterPage() {
  
 	const router = useRouter()
 
-
     const onRegister=async(data: RegisterFrontEndSchema) =>{
 		try {
-      console.log("register")
-          data.avatar = imageId
+      setLoading(true)
+          data.avatar = imageId == "" ? "65889b1beab06131ed23e4dd" : imageId
           await registerUser({
             ...data
           })
@@ -54,11 +55,9 @@ export default function RegisterPage() {
           toast.success("Register success")
       }
 		catch (e) {
-      console.log(e)
-      toast.error("Error")
+      toast.error("Error" + e)
 		}
 	}
-  console.log(errors)
   const style = { width: "50%", 
   height: "30vh", border: "none", margin: "auto" };
   const value = getValues()
@@ -112,7 +111,9 @@ export default function RegisterPage() {
               )
              }
             
-            <Button type="submit">Registro</Button>
+            <Button 
+            disabled={loading}
+            type="submit">Registro</Button>
             </form>
         </>
   )

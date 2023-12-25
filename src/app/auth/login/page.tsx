@@ -3,7 +3,7 @@ import Link from "next/link"
 import { useForm } from "react-hook-form"
 import Button from "@/app/auth/components/Button"
 import { useRouter,useSearchParams } from 'next/navigation'
-import {useCallback} from "react"
+import {useCallback,useState} from "react"
 import { zodResolver } from '@hookform/resolvers/zod'
 import {LoginSchema, loginSchema} from "@/schema/user"
 import { signIn } from 'next-auth/react'
@@ -20,10 +20,12 @@ export default function LoginPage() {
 	const router = useRouter()
 	const query = useSearchParams()
 	const callbackUrl = query.get('callbackUrl')
-
+  const [loading,setLoading] = useState<boolean>(false)
   const attempLogin = useCallback(async(data: LoginSchema) => {
 		console.log('login callback')
+    setLoading(true)
 		const result = await signIn('Credentials', { ...data, redirect: false })
+    setLoading(false)
 		if (result?.ok) {
         if (callbackUrl) {
           router.push(callbackUrl)
@@ -56,7 +58,9 @@ export default function LoginPage() {
                     register={register("password", { required: true })}
                   />
         	  <p className="text-red-500">{errors.password?.message}</p>
-            <Button type="submit">Inicio de sessión</Button>
+            <Button 
+            disabled={loading}
+            type="submit">Inicio de sessión</Button>
             </form>
       </>
   )

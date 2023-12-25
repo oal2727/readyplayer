@@ -7,7 +7,7 @@ import { signOut } from 'next-auth/react'
 export default function Chat() {
   // signOut()
   return (
-    <div className='bg-gray-700 h-100vh md:h-screen'>
+    <div className='bg-gray-700 h-auto md:h-screen'>
           <div className='w-[200px] py-4 justify-center flex mx-auto'>
           <Button
           onClick={async() => {

@@ -17,7 +17,7 @@ export default async function AdminLayout({
 	const session = (await getServerSession(nextAuthOptions)) as Session
 
 	return <html lang="es" className='w-full h-full'>
-		<body className={'flex h-full w-full bg-white'}>
+		<body>
             <div className="container relative hidden flex-col  bg-white
 			items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
 					<Providers session={session}>
