@@ -57,7 +57,7 @@ export default function ChatTable(){
               }
               setMessages(prevMessages => [...prevMessages, formatMessage2]);
               const response = await audioForBot({text:data})
-              const audio = new Audio("/"+response.audio)
+              const audio = new Audio("/tmp/"+response.audio)
               audio.play()
               setMessages((prevMessages) => {
                 const updatedMessages = [...prevMessages];
