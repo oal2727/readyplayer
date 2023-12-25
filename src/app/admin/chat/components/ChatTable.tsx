@@ -57,8 +57,8 @@ export default function ChatTable(){
               }
               setMessages(prevMessages => [...prevMessages, formatMessage2]);
               const response = await audioForBot({text:data})
-              const audio = new Audio("/tmp/"+response.audio)
-              audio.play()
+                const audio = new Audio(response.audio)
+                audio.play()
               setMessages((prevMessages) => {
                 const updatedMessages = [...prevMessages];
                 const lastMessageIndex = updatedMessages.length - 1;
@@ -67,7 +67,7 @@ export default function ChatTable(){
                 return updatedMessages;
               });
               // SPEAK TEXT FOR OPENAI MODEL
-              await removeAudio({audio:response.audio})
+              //await removeAudio({audio:response.audio})
               setProcessResponse(true)
 
             }

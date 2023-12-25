@@ -34,7 +34,8 @@ class OpenAiService{
           });
           const buffer = Buffer.from(await mp3.arrayBuffer());
           await fs.promises.writeFile(outputPath, buffer);
-          return uidAudio+".mp3";
+          //let nameFile = uidAudio+".mp3"
+          return outputPath;
     }
 
 }

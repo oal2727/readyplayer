@@ -8,10 +8,12 @@ import OpenAiService from "@/app/service/OpenAI"
 const openAiService = new OpenAiService()
 
 async function convertAudioToText(audioData:Buffer) {
-    const currentWorkingDirectory = "/tmp/"//process.cwd();
-    const outputPath = path.join(currentWorkingDirectory, 'output.mp3');
+    const currentWorkingDirectory = process.cwd();
+    const outputPath = path.join(currentWorkingDirectory, 'public', 'output.mp3');
+    //const outputPath = path.join(currentWorkingDirectory, 'public', 'output.mp3');
+    //const currentWorkingDirectory = "/tmp/"//process.cwd();
+    //const outputPath = path.join(currentWorkingDirectory, 'output.mp3');
     fs.writeFileSync(outputPath, audioData);
-    console.log(outputPath)
     const transcribedText= await openAiService.analyzeVoice(outputPath)
     fs.unlinkSync(outputPath);
     return transcribedText;
@@ -39,6 +41,10 @@ const voiceRouter = router({
         const response  = await openAiService.analyzeText(text)
         const messageChatbot = response.message.content
         const audio = await openAiService.speakTextForVoice(messageChatbot)
+        //console.log(audio)
+        //const blob = new Blob([audio], { type: 'audio/mp3' });
+        //const audioDataUrl = URL.createObjectURL(blob);
+        //console.log(audioDataUrl)
         return {
           "message":messageChatbot,
           "audio":audio
@@ -48,9 +54,9 @@ const voiceRouter = router({
         audio:z.string()
     })).mutation(async({input})=>{
         const {audio} = input
-        const currentWorkingDirectory = process.cwd();
-        const outputPath = path.join(currentWorkingDirectory, `/tmp/${audio}`);
-        fs.unlinkSync(outputPath);
+        const currentWorkingDirectory = "/tmp/";
+        const outputPath = path.join(currentWorkingDirectory, `${audio}`);
+        //fs.unlinkSync(outputPath);
         return "deleete success"
     })
 })
