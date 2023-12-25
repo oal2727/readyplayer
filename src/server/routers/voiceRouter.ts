@@ -49,7 +49,7 @@ const voiceRouter = router({
     })).mutation(async({input})=>{
         const {audio} = input
         const currentWorkingDirectory = process.cwd();
-        const outputPath = path.join(currentWorkingDirectory, `public/${audio}`);
+        const outputPath = path.join(currentWorkingDirectory, `/tmp/${audio}`);
         fs.unlinkSync(outputPath);
         return "deleete success"
     })

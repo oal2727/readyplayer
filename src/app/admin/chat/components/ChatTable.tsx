@@ -80,7 +80,6 @@ export default function ChatTable(){
         try{
             let chunks=[] as any
             const audioMedia = await navigator.mediaDevices.getUserMedia({audio:true})
-            console.log(audioMedia)
             const newMediaRecoder = new MediaRecorder(audioMedia)
             newMediaRecoder.onstart=()=>{
                 chunks=[]
@@ -99,7 +98,6 @@ export default function ChatTable(){
                 // audio.play(); // escuchar a la persona que activa el audio
                 sendRecordingToApi(audioBlob)
             }
-            console.log("newMediaRecoder",newMediaRecoder)
             setMediaRecorder(newMediaRecoder)
         }catch(error){
             console.log("error audio active")
@@ -112,7 +110,6 @@ export default function ChatTable(){
 
     const toogleMicrophone=(value:boolean)=>{
         setRecording(value);
-        console.log("start",value)
         if(mediaRecorder && value){
             mediaRecorder.start(); // function for intiialize recording
             
