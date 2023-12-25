@@ -24,9 +24,9 @@ class OpenAiService{
         return response.text
     }
     async speakTextForVoice(text:string){
-        const currentWorkingDirectory = process.cwd();
+        const currentWorkingDirectory = "/tmp/";
         const uidAudio = String(new Date().getTime())
-        const outputPath = path.join(currentWorkingDirectory, `/tmp/${uidAudio}.mp3`);
+        const outputPath = path.join(currentWorkingDirectory, `${uidAudio}.mp3`);
         const mp3 = await this.openai.audio.speech.create({
             model: "tts-1",
             voice: "alloy",
