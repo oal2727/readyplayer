@@ -37,7 +37,6 @@ export default function ChatTable(){
             reader.onloadend = async function () {
                 const base64Audio = (reader.result as string).split(',')[1] as string;
               const data = await convertAudio({audio:base64Audio})
-                console.log("data_test",data)
               //   const data = await validateAudioForText(base64Audio)
               const formatMessage={
                 id:new Date().getTime(),
@@ -45,7 +44,6 @@ export default function ChatTable(){
                 message:data,
                 user:nameUser//),
               }
-              console.log(formatMessage)
               setMessages(prevMessages => [...prevMessages, formatMessage]);
               // TEXT FOR AUDIO FOR OPENAI MODEL
               const idMessage = new Date().getTime()
@@ -57,7 +55,11 @@ export default function ChatTable(){
               }
               setMessages(prevMessages => [...prevMessages, formatMessage2]);
               const response = await audioForBot({text:data})
-                const audio = new Audio(response.audio)
+               const blobAudio =  Buffer.from(response.audio,"base64");
+               const audioBlob = new Blob([blobAudio], { type: 'audio/webm' });
+               const audioDataUrl = URL.createObjectURL(audioBlob);
+
+                const audio = new Audio(String(audioDataUrl))  
                 audio.play()
               setMessages((prevMessages) => {
                 const updatedMessages = [...prevMessages];
@@ -90,11 +92,11 @@ export default function ChatTable(){
             }
             newMediaRecoder.onstop=async()=>{
                 const audioBlob = new Blob(chunks, { type: 'audio/webm' });
-                const audioUrl = URL.createObjectURL(audioBlob);
-                const audio = new Audio(audioUrl);
-                audio.onerror = function (err) {
-                    console.error('Error playing audio:', err);
-                };
+                // const audioUrl = URL.createObjectURL(audioBlob);
+                // const audio = new Audio(audioUrl);
+                // audio.onerror = function (err) {
+                //     console.error('Error playing audio:', err);
+                // };
                 // audio.play(); // escuchar a la persona que activa el audio
                 sendRecordingToApi(audioBlob)
             }

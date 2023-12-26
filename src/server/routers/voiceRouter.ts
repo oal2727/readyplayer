@@ -4,15 +4,14 @@ import z from "zod"
 import fs from 'fs';
 import path from "path"
 import OpenAiService from "@/app/service/OpenAI"
-
 const openAiService = new OpenAiService()
 
 async function convertAudioToText(audioData:Buffer) {
-    const currentWorkingDirectory = process.cwd();
-    const outputPath = path.join(currentWorkingDirectory, 'public', 'output.mp3');
+    //const currentWorkingDirectory = process.cwd();
     //const outputPath = path.join(currentWorkingDirectory, 'public', 'output.mp3');
-    //const currentWorkingDirectory = "/tmp/"//process.cwd();
-    //const outputPath = path.join(currentWorkingDirectory, 'output.mp3');
+    //const outputPath = path.join(currentWorkingDirectory, 'public', 'output.mp3');
+    const currentWorkingDirectory = "/tmp/"//process.cwd();
+    const outputPath = path.join(currentWorkingDirectory, 'output.mp3');
     fs.writeFileSync(outputPath, audioData);
     const transcribedText= await openAiService.analyzeVoice(outputPath)
     fs.unlinkSync(outputPath);
@@ -28,7 +27,7 @@ const voiceRouter = router({
     // Extract the audio data from the request body
     console.log(input)
     const base64Audio = input.audio; 
-    const audio = Buffer.from(base64Audio, 'base64');
+        const audio = Buffer.from(base64Audio, 'base64');
         // Convert the audio data to text
         const text = await convertAudioToText(audio);
         return text
@@ -42,12 +41,16 @@ const voiceRouter = router({
         const messageChatbot = response.message.content
         const audio = await openAiService.speakTextForVoice(messageChatbot)
         //console.log(audio)
-        //const blob = new Blob([audio], { type: 'audio/mp3' });
-        //const audioDataUrl = URL.createObjectURL(blob);
-        //console.log(audioDataUrl)
+        const audioBuffer = fs.readFileSync(audio);
+        //const blob = new Blob([audioBuffer], { type: 'audio/webm' });
+        const audioFormat = Buffer.from(audioBuffer).toString('base64')
+
+        // const audioDataUrl = URL.createObjectURL(blob);
+        // console.log(audioDataUrl)
+        // const audioStream = fs.createReadStream(audio);
         return {
           "message":messageChatbot,
-          "audio":audio
+          "audio":audioFormat
         };
     }),
     removeAudio:authProcedure.input(z.object({
