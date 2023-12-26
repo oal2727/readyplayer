@@ -18,18 +18,18 @@ export default async function AdminLayout({
 
 	return <html lang="es" className='w-full h-full'>
 		<body>
-            <div className="container relative hidden flex-col  bg-white
-			items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
 					<Providers session={session}>
-                    <SidebarLogin/>
-                    <CardAuth>
-					<main className="w-full h-full">
+					<main className="w-full h-full relative  bg-white
+			items-center justify-center md:grid lg:max-w-none
+			grid-cols-1
+			md:grid-cols-2 lg:px-0">
+					<SidebarLogin/>
+					<CardAuth>
 						{children}
+						</CardAuth>
 					</main>
-                    </CardAuth>
 					</Providers>
 					<Toaster />
-				</div>
 		</body>
 	</html>
 }

@@ -1,6 +1,8 @@
 export default function SidebarLogin(){
     return(
-        <div className="relative hidden flex-col bg-muted p-10 text-white dark:border-r lg:flex h-screen">
+        <div className="relative hidden flex-col 
+        md:block
+        bg-muted p-10 text-white dark:border-r lg:flex h-screen">
         <div className="absolute inset-0" 
          style={{
           backgroundImage: 'url(/image_background_digital.jpg)',

@@ -39,7 +39,7 @@ export default function LoginPage() {
 	}, [])
 
   return (
-      <>
+      <div className="w-full">
         <Link
           href="/auth/register"
           className={ "text-black absolute right-4 top-4 md:right-8 md:top-8"}
@@ -62,6 +62,6 @@ export default function LoginPage() {
             disabled={loading}
             type="submit">Inicio de sessión</Button>
             </form>
-      </>
+      </div>
   )
 }
