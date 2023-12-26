@@ -39,7 +39,7 @@ export default function LoginPage() {
 	}, [])
 
   return (
-      <div className="w-full">
+      <div className="w-full px-6 md:px-0">
         <Link
           href="/auth/register"
           className={ "text-black absolute right-4 top-4 md:right-8 md:top-8"}

@@ -130,7 +130,8 @@ export default function ChatTable(){
         <div className="
         grid 
         grid-cols-1
-        px-40
+        px-4
+        md:px-40
         md:px-0
         md:grid-cols-3 items-center m-auto 
         place-items-center
